@@ -18,8 +18,7 @@ function App() {
     // it emits the join_room event to the server
     // and sets the showChat state to true, this will show the chat component
     if (username !== "" && room !== "") {
-      socket.emit("join_room", room);
-      socket.emit("user_username", username, room);
+      socket.emit("user_joined_room", username, room);
       setShowChat(true);
     }
   };

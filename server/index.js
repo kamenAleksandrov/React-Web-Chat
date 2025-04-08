@@ -26,13 +26,16 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
-  socket.on("join_room", (room) => {
-    socket.join(room);
-    console.log("User with id:", socket.id, "joined room:", room);
-  });
+  // socket.on("join_room", (room) => {
+  //   socket.join(room);
+  //   console.log("User with id:", socket.id, "joined room:", room);
+  // });
 
-  socket.on("user_username", (username, room) => {
-    socket.to(room).emit("username_received", username);
+  socket.on("user_joined_room", (username, room) => {
+    socket.join(room);
+    socket.roomName = room;
+    console.log("User", username, "with id:", socket.id, "joined room:", room);
+    socket.to(room).emit("username_received", username, socket.id);
     console.log("Username sent:", username, "to room:", room);
   });
 
@@ -41,7 +44,19 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    console.log("User disconnected", socket.id);
+    if (socket.roomName) {
+      socket.to(socket.roomName).emit("user_disconnected", socket.id);
+      console.log(
+        `User ${socket.id} disconnected from room ${socket.roomName}`
+      );
+    }
+
+    // socket.on("disconnect", () => {
+    //   console.log("User disconnected", socket.id);
+    //   socket.to(socket.id).emit("user_disconnected", socket.id);
+    // this will emit the user_disconnected event to all sockets in the room
+    //i think this may be sending the event to the room named after the id
+    // as this room is nonexistent, i think i will have to change this
   });
 });
 

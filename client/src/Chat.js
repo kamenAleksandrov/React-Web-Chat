@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import ScrollToBottom from "react-scroll-to-bottom";
 //this adds the scroll to bottom functionality to the chat window
 
 function Chat({ socket, username, room }) {
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
-  const [usernamesList, setUsernamesList] = useState([]);
+  //const [usernamesList, setUsernamesList] = useState([]);
+  let [usersList, setUsersList] = useState([]);
+
 
   const sendMessage = async () => {
     //this sends the message to the right room from the right user
@@ -31,23 +33,32 @@ function Chat({ socket, username, room }) {
   };
 
   useEffect(() => {
+
     socket.on("receive_message", (data) => {
       setMessageList((list) => [...list, data]);
     });
-  }, [socket]);
 
-  useEffect(() => {
-    socket.on("username_received", (receivedName) => {
-      setUsernamesList((listU) => [...listU, receivedName]);
+    socket.on("username_received", (receivedName, receivedId) => {
+      setUsersList((listU) => [...listU, { id: receivedId, username: receivedName }]);
       //to do: add a function that removes the user from the list
       //when he leaves the room, also update the list when a new user joins
     });
+
+    // Handle a user disconnecting
+    socket.on("user_disconnected", (disconnectedUser) => {
+      setUsersList((listU) => listU.filter(user => user.id == disconnectedUser));
+    });
+
   }, [socket]);
+
+  function activeUsers() {
+    return (usersList.map(user => `${user.username}`).join(', '));
+  }
 
   return (
     <div className="chat-window">
       <div className="active-users">
-        <p>Active Users: {usernamesList.join(", ")}</p>
+        <p id="active-users-list">Active Users: You, {activeUsers()}</p>
       </div>
       <div className="chat-header">
         <p>Room password: {room}</p>
