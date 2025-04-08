@@ -4,9 +4,9 @@
   display: grid;
   place-items: center;
   background: linear-gradient(-45deg, #0c2233, #11393a);
-	background-size: 400% 400%;
-	animation: gradient 15s ease infinite;
-	height: 100vh;
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+  height: 100vh;
 }
 body {
   margin: 0%;
@@ -14,17 +14,16 @@ body {
 }
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,700");
 @keyframes gradient {
-	0% {
-		background-position: 0% 50%;
-	}
-	50% {
-		background-position: 100% 50%;
-	}
-	100% {
-		background-position: 0% 50%;
-	}
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
-
 
 .joinChatContainer {
   display: flex;
@@ -70,15 +69,15 @@ body {
   height: 75%;
   position: absolute;
 }
-.active-users{
+.active-users {
   display: block;
   padding: 0 1em 0 2em;
   color: #fff;
   font-weight: 700;
   line-height: 45px;
   background: linear-gradient(-45deg, #0c2233, #44294d, #154d61, #14745d);
-	background-size: 400% 400%;
-	animation: gradient 15s ease infinite;
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
 }
 .chat-window p {
   margin: 0;
@@ -87,8 +86,8 @@ body {
   height: 45px;
   border-radius: 6px;
   background: linear-gradient(-45deg, #0c2233, #44294d, #154d61, #14745d);
-	background-size: 400% 400%;
-	animation: gradient 15s ease infinite;
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
   position: relative;
 }
 .chat-window .chat-header p {
@@ -152,7 +151,7 @@ body {
   margin-left: 5px;
 }
 
-#time { 
+#time {
   color: #858585;
 }
 
