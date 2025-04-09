@@ -31,47 +31,24 @@ function Chat({ socket, username, room }) {
     }
   };
 
-  // useEffect(() => {
-
-  //   socket.on("receive_message", (data) => {
-  //     setMessageList((list) => [...list, data]);
-  //   });
-
-  //   socket.on("username_received", (receivedName, receivedId) => {
-  //     setUsersList((listU) => [...listU, { id: receivedId, username: receivedName }]);
-  //     //to do: add a function that removes the user from the list
-  //     //when he leaves the room, also update the list when a new user joins
-  //   });
-
-  //   // Handle a user disconnecting
-  //   socket.on("user_disconnected", (disconnectedUser) => {
-  //     console.log("Disconnected ID:", disconnectedUser);
-  //     setUsersList((listU) => listU.filter(user => user.id !== disconnectedUser));
-  //   });
-
-  // }, [socket]);
-
   useEffect(() => {
-     // When joining the room, receive the full list of users already there
-     socket.on("current_users", (userArray) => {
+    // When joining the room, receive the full list of users already there
+    socket.on("current_users", (userArray) => {
       // Make sure each user has the structure { id, username }
       const formatted = userArray.map((u) => ({
         id: u.userId,
-        username: u.username,
+        username: u.user,
       }));
       setUsersList(formatted);
-      setUsersList([{ id: socket.id, username }]);
     });
     socket.on("receive_message", handleMessage);
     socket.on("username_received", handleUsername);
-   
     socket.on("user_disconnected", handleDisconnect);
 
     return () => {
       socket.off("current_users");
       socket.off("receive_message", handleMessage);
       socket.off("username_received", handleUsername);
-      
       socket.off("user_disconnected", handleDisconnect);
     };
   }, [socket]);
@@ -83,7 +60,7 @@ function Chat({ socket, username, room }) {
   function handleUsername(receivedName, receivedId) {
     setUsersList((listU) => {
       // Only add if not already in the list
-      if (listU.find(user => user.id === receivedId)) return listU;
+      if (listU.find((user) => user.id === receivedId)) return listU;
       return [...listU, { id: receivedId, username: receivedName }];
     });
   }
@@ -96,18 +73,18 @@ function Chat({ socket, username, room }) {
 
   function activeUsers() {
     if (usersList.length > 1) {
-      return usersList.map((user) => `${user.username}`).join(", ");
+      return usersList.map(user => user.username).join(", "); // Multiple users
     } else if (usersList.length === 1) {
-      return "and " + usersList.map((user) => `${user.username}`).join(", ");
+      return usersList[0].username; // One user
     } else {
-      return "alone";
+      return "alone"; // No users
     }
   }
 
   return (
     <div className="chat-window">
       <div className="active-users">
-        <p id="active-users-list">Active Users: You {activeUsers()}</p>
+        <p id="active-users-list">Active Users: {activeUsers()}</p>
       </div>
       <div className="chat-header">
         <p>Room password: {room}</p>
